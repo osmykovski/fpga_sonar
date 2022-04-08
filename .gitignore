@@ -1,0 +1,11 @@
+*/vivado
+vivado
+/sdk/*
+!sdk/sonar_prj
+*.zip
+/sources/bd/*
+!/sources/bd/*.bd
+/sdk/*/Debug/
+sources/ip/*/*
+!sources/ip/*/*.xci
+.Xil
