@@ -18,6 +18,11 @@ set_property SLEW FAST [get_ports SCK_H]
 set_property SLEW FAST [get_ports SCK_L]
 set_property SLEW FAST [get_ports WS_H]
 set_property SLEW FAST [get_ports WS_L]
+set_property PULLDOWN true [get_ports SD_H]
+set_property PULLDOWN true [get_ports SD_L]
+
+set_property PACKAGE_PIN P20 [get_ports wave]
+set_property IOSTANDARD LVCMOS33 [get_ports wave]
 
 set_property CONFIG_MODE SPIx4 [current_design]
 set_property BITSTREAM.CONFIG.SPI_BUSWIDTH 4 [current_design]

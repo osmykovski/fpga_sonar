@@ -13,13 +13,16 @@ int main(){
 
 	for(int a=0;a<100000;a++)  fifo_rd_fifo(XPAR_AXI_STREAM_FIFO_0_BASEADDR);
 
-	xil_printf("%08x", DestinationBuffer);
+	xil_printf("%08x\r\n", DestinationBuffer);
 
 	for(int i=0; i<10000;){
 		int occup = fifo_rx_get_occup(XPAR_AXI_STREAM_FIFO_0_BASEADDR);
-		for(int x=0; x<occup; x++){
+		for(int x=0; x<occup/4; x++){
 			DestinationBuffer[i] = fifo_rd_fifo(XPAR_AXI_STREAM_FIFO_0_BASEADDR);
 			i++;
+			fifo_rd_fifo(XPAR_AXI_STREAM_FIFO_0_BASEADDR);
+			fifo_rd_fifo(XPAR_AXI_STREAM_FIFO_0_BASEADDR);
+			fifo_rd_fifo(XPAR_AXI_STREAM_FIFO_0_BASEADDR);
 		}
 	}
 

@@ -14,10 +14,17 @@ module tb ();
         rstn <= 1;
     end
 
-    logic [63:0] tdata;
+    logic [31:0] tdata;
     logic        tvalid;
     logic        tready = 1;
-    logic        tuser;
+
+    typedef enum logic [1:0] {
+        LEFT_LOW   = 2'b00,
+        LEFT_HIGH  = 2'b01,
+        RIGHT_LOW  = 2'b10,
+        RIGHT_HIGH = 2'b11
+    } mic_enum;
+    mic_enum tuser;
 
     logic WS;
     logic SCK;
@@ -42,14 +49,14 @@ module tb ();
 
     i2s_if UUT (
         .m_axis_aclk   (clk   ),
-        .m_axis_arstn  (rstn  ),
+        .m_axis_aresetn(rstn  ),
         .WS            (WS    ),
         .SCK           (SCK   ),
         .SD            (SD    ),
         .m_axis_tdata  (tdata ),
         .m_axis_tvalid (tvalid),
         .m_axis_tready (tready),
-        .m_axis_tuser  (tuser )
+        .m_axis_tuser  ({tuser})
     );
     
 endmodule
