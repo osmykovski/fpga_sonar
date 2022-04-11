@@ -5,7 +5,8 @@
       "device": "xc7z010clg400-1",
       "name": "design_1",
       "synth_flow_mode": "Hierarchical",
-      "tool_version": "2019.1"
+      "tool_version": "2019.1",
+      "validated": "true"
     },
     "design_tree": {
       "processing_system7_0": "",
@@ -20,12 +21,63 @@
       "axis_subset_converter_0": "",
       "sound_gen_0": "",
       "system_ila_0": "",
-      "i2s_if_0": ""
+      "i2s_if_0": "",
+      "lowpass_fir_0": ""
     },
     "interface_ports": {
       "DDR_0": {
         "mode": "Master",
-        "vlnv": "xilinx.com:interface:ddrx_rtl:1.0"
+        "vlnv": "xilinx.com:interface:ddrx_rtl:1.0",
+        "parameters": {
+          "AXI_ARBITRATION_SCHEME": {
+            "value": "TDM",
+            "value_src": "default"
+          },
+          "BURST_LENGTH": {
+            "value": "8",
+            "value_src": "default"
+          },
+          "CAN_DEBUG": {
+            "value": "false",
+            "value_src": "default"
+          },
+          "CAS_LATENCY": {
+            "value": "11",
+            "value_src": "default"
+          },
+          "CAS_WRITE_LATENCY": {
+            "value": "11",
+            "value_src": "default"
+          },
+          "CS_ENABLED": {
+            "value": "true",
+            "value_src": "default"
+          },
+          "DATA_MASK_ENABLED": {
+            "value": "true",
+            "value_src": "default"
+          },
+          "DATA_WIDTH": {
+            "value": "8",
+            "value_src": "default"
+          },
+          "MEMORY_TYPE": {
+            "value": "COMPONENTS",
+            "value_src": "default"
+          },
+          "MEM_ADDR_MAP": {
+            "value": "ROW_COLUMN_BANK",
+            "value_src": "default"
+          },
+          "SLOT": {
+            "value": "Single",
+            "value_src": "default"
+          },
+          "TIMEPERIOD_PS": {
+            "value": "1250",
+            "value_src": "default"
+          }
+        }
       }
     },
     "ports": {
@@ -427,16 +479,16 @@
               }
             },
             "interface_nets": {
-              "s00_couplers_to_auto_pc": {
-                "interface_ports": [
-                  "S_AXI",
-                  "auto_pc/S_AXI"
-                ]
-              },
               "auto_pc_to_s00_couplers": {
                 "interface_ports": [
                   "M_AXI",
                   "auto_pc/M_AXI"
+                ]
+              },
+              "s00_couplers_to_auto_pc": {
+                "interface_ports": [
+                  "S_AXI",
+                  "auto_pc/S_AXI"
                 ]
               }
             },
@@ -547,11 +599,31 @@
         "ports": {
           "clk": {
             "type": "clk",
-            "direction": "I"
+            "direction": "I",
+            "parameters": {
+              "ASSOCIATED_RESET": {
+                "value": "rstn",
+                "value_src": "constant"
+              },
+              "CLK_DOMAIN": {
+                "value": "design_1_processing_system7_0_0_FCLK_CLK0",
+                "value_src": "default_prop"
+              },
+              "FREQ_HZ": {
+                "value": "100000000",
+                "value_src": "user_prop"
+              }
+            }
           },
           "rstn": {
             "type": "rst",
-            "direction": "I"
+            "direction": "I",
+            "parameters": {
+              "POLARITY": {
+                "value": "ACTIVE_LOW",
+                "value_src": "constant"
+              }
+            }
           },
           "wave": {
             "direction": "O"
@@ -599,6 +671,10 @@
             "value": "256"
           }
         }
+      },
+      "lowpass_fir_0": {
+        "vlnv": "xilinx.com:user:lowpass_fir:1.0",
+        "xci_name": "design_1_lowpass_fir_0_0"
       }
     },
     "interface_nets": {
@@ -608,20 +684,11 @@
           "processing_system7_0/DDR"
         ]
       },
-      "axis_subset_converter_0_M_AXIS": {
+      "axi_interconnect_0_M00_AXI": {
         "interface_ports": [
-          "axi_stream_fifo_0/S_AXIS",
-          "axis_subset_converter_0/M_AXIS",
-          "system_ila_0/SLOT_0_AXIS"
-        ],
-        "hdl_attributes": {
-          "DEBUG": {
-            "value": "true"
-          },
-          "MARK_DEBUG": {
-            "value": "true"
-          }
-        }
+          "axi_interconnect_0/M00_AXI",
+          "axi_stream_fifo_0/S_AXI"
+        ]
       },
       "axis_dwidth_converter_0_M_AXIS": {
         "interface_ports": [
@@ -629,16 +696,23 @@
           "i2s_if_0/m_axis"
         ]
       },
-      "axi_interconnect_0_M00_AXI": {
-        "interface_ports": [
-          "axi_interconnect_0/M00_AXI",
-          "axi_stream_fifo_0/S_AXI"
-        ]
-      },
       "S00_AXI_1": {
         "interface_ports": [
           "axi_interconnect_0/S00_AXI",
           "processing_system7_0/M_AXI_GP0"
+        ]
+      },
+      "axis_subset_converter_0_M_AXIS": {
+        "interface_ports": [
+          "lowpass_fir_0/s_axis",
+          "axis_subset_converter_0/M_AXIS",
+          "system_ila_0/SLOT_0_AXIS"
+        ]
+      },
+      "lowpass_fir_0_m_axis": {
+        "interface_ports": [
+          "lowpass_fir_0/m_axis",
+          "axi_stream_fifo_0/S_AXIS"
         ]
       }
     },
@@ -697,7 +771,8 @@
           "axi_stream_fifo_0/S_AXIS_ARESETN",
           "axis_subset_converter_0/aresetn",
           "system_ila_0/resetn",
-          "i2s_if_0/m_axis_aresetn"
+          "i2s_if_0/m_axis_aresetn",
+          "lowpass_fir_0/s_axis_arstn"
         ]
       },
       "processing_system7_0_FCLK_CLK1": {
@@ -707,7 +782,8 @@
           "axi_stream_fifo_0/S_AXIS_ACLK",
           "axis_subset_converter_0/aclk",
           "system_ila_0/clk",
-          "i2s_if_0/m_axis_aclk"
+          "i2s_if_0/m_axis_aclk",
+          "lowpass_fir_0/s_axis_aclk"
         ]
       },
       "sound_gen_0_wave": {
