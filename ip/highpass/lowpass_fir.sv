@@ -32,7 +32,7 @@ module lowpass_fir (
         else begin
             if(s_axis_tvalid & s_axis_tready)
                 sample_cnt <= 0;
-            else if(sample_cnt < filter_order+1)
+            else if(sample_cnt < filter_order)
                 sample_cnt <= sample_cnt + 1;
         end
     end
@@ -72,21 +72,48 @@ module lowpass_fir (
          1106,     -726,      382,     -150,       32,        8,      -12,        6
     };
 
-    logic signed [47:0] accum;
+    logic [6:0] coe_cnt;
+    always @(posedge s_axis_aclk) begin
+        if(!s_axis_arstn)
+            coe_cnt <= 0;
+        else begin
+            if(s_axis_tvalid & s_axis_tready)
+                coe_cnt <= 1;
+            else if(coe_cnt != 0)
+                coe_cnt <= coe_cnt + 1;
+        end
+    end
+
+    logic signed [23:0] coe_fir;
     always @(posedge s_axis_aclk) begin
         if(s_axis_arstn & sample_cnt < filter_order)
-            accum <= accum + (sample * coe[sample_cnt]);
-        else
+            coe_fir <= coe[coe_cnt];
+    end
+
+    logic signed [47:0] accum;
+    always @(posedge s_axis_aclk) begin
+        if(!s_axis_arstn)
             accum <= 0;
+        else begin
+            if(sample_cnt < filter_order)
+                accum <= accum + (sample * coe_fir);
+            else if(m_axis_tready & m_axis_tvalid)
+                accum <= 0;
+        end
     end
 
     assign s_axis_tready = (sample_cnt >= filter_order) & m_axis_tready;
+    assign m_axis_tdata = accum >>> 16;
 
     always @(posedge s_axis_aclk) begin
-        if(s_axis_arstn & sample_cnt == filter_order)
-            m_axis_tdata <= accum >>> 16;
+        if(!s_axis_arstn)
+            m_axis_tvalid <= 0;
+        else begin
+            if(sample_cnt == filter_order-1)
+                m_axis_tvalid <= 1;
+            if(m_axis_tvalid & m_axis_tready)
+                m_axis_tvalid <= 0;
+        end
     end
-
-    assign m_axis_tvalid = sample_cnt == filter_order;
     
 endmodule
