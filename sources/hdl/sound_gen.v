@@ -12,7 +12,7 @@ module sound_gen #(
             clkdiv_cnt <= 0;
             wave <= 0;
         end else begin
-            if(clkdiv_cnt < clk_div)
+            if(clkdiv_cnt < clk_div-1)
                 clkdiv_cnt <= clkdiv_cnt + 1;
             else begin
                 clkdiv_cnt <= 0;
