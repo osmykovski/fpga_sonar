@@ -51,7 +51,7 @@ module tb ();
     logic        m_tvalid;
     logic [1:0]  m_tuser;
 
-    lowpass_fir UUT (
+    highpass_fir UUT (
         .s_axis_aclk    (clk),
         .s_axis_arstn   (rstn),
         .s_axis_tdata   ({8'h0, tdata}),

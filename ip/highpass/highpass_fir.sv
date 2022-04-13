@@ -1,4 +1,4 @@
-module lowpass_fir (
+module highpass_fir (
     input  logic               s_axis_aclk,
     input  logic               s_axis_arstn,
 
