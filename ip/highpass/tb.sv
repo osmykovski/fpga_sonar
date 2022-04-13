@@ -39,7 +39,7 @@ module tb ();
             if(data_cnt < 255) begin
                 data_cnt <= data_cnt + 1;
                 tvalid <= 0;
-            end else begin
+            end else if(tready) begin
                 data_cnt <= 0;
                 tdata <= $random();
                 tvalid <= 1;
@@ -47,20 +47,25 @@ module tb ();
         end
     end
     
-    logic [31:0] m_tdata;
+    logic [23:0] m_tdata;
     logic        m_tvalid;
     logic [1:0]  m_tuser;
+
+    logic m_tready = 1;
+    always @(posedge clk) begin
+        m_tready <= $urandom();
+    end
 
     highpass_fir UUT (
         .s_axis_aclk    (clk),
         .s_axis_arstn   (rstn),
-        .s_axis_tdata   ({8'h0, tdata}),
+        .s_axis_tdata   (tdata),
         .s_axis_tvalid  (tvalid),
         .s_axis_tready  (tready),
         .s_axis_tuser   (tuser),
         .m_axis_tdata   (m_tdata),
         .m_axis_tvalid  (m_tvalid),
-        .m_axis_tready  (1),
+        .m_axis_tready  (m_tready),
         .m_axis_tuser   (m_tuser)
     );
     

@@ -9,3 +9,6 @@ vivado
 sources/ip/*/*
 !sources/ip/*/*.xci
 .Xil
+*.str
+*.jou
+*.log
