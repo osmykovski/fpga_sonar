@@ -11,7 +11,7 @@ u32 DestinationBuffer[10000];
 
 int main(){
 
-	for(int i=0; i<10000;){
+	for(int i=0; i<100000;){
 		int occup = fifo_rx_get_occup(XPAR_AXI_STREAM_FIFO_0_BASEADDR);
 		for(int x=0; x<occup; x++){
 			fifo_rd_fifo(XPAR_AXI_STREAM_FIFO_0_BASEADDR);
