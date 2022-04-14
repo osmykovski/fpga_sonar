@@ -20,10 +20,10 @@
       "axis_subset_converter_0": "",
       "sound_gen_0": "",
       "i2s_if_0": "",
-      "demod_0": "",
       "highpass_fir_0": "",
       "axis_subset_converter_1": "",
-      "axi_stream_fifo_0": ""
+      "axi_stream_fifo_0": "",
+      "demod_0": ""
     },
     "interface_ports": {
       "DDR_0": {
@@ -480,16 +480,16 @@
               }
             },
             "interface_nets": {
-              "auto_pc_to_s00_couplers": {
-                "interface_ports": [
-                  "M_AXI",
-                  "auto_pc/M_AXI"
-                ]
-              },
               "s00_couplers_to_auto_pc": {
                 "interface_ports": [
                   "S_AXI",
                   "auto_pc/S_AXI"
+                ]
+              },
+              "auto_pc_to_s00_couplers": {
+                "interface_ports": [
+                  "M_AXI",
+                  "auto_pc/M_AXI"
                 ]
               }
             },
@@ -637,10 +637,6 @@
           }
         }
       },
-      "demod_0": {
-        "vlnv": "xilinx.com:user:demod:1.0",
-        "xci_name": "design_1_demod_0_0"
-      },
       "highpass_fir_0": {
         "vlnv": "xilinx.com:user:highpass_fir:1.0",
         "xci_name": "design_1_highpass_fir_0_0"
@@ -656,13 +652,17 @@
             "value": "3"
           },
           "TDATA_REMAP": {
-            "value": "tdata[23:0], 8'b00000000"
+            "value": "tdata[23:0], 6'b000000, tuser[1:0]"
           }
         }
       },
       "axi_stream_fifo_0": {
         "vlnv": "xilinx.com:user:axi_stream_fifo:1.0",
         "xci_name": "design_1_axi_stream_fifo_0_0"
+      },
+      "demod_0": {
+        "vlnv": "xilinx.com:user:demod:1.0",
+        "xci_name": "design_1_demod_0_0"
       }
     },
     "interface_nets": {
@@ -696,12 +696,6 @@
           "axis_subset_converter_1/S_AXIS"
         ]
       },
-      "axis_subset_converter_1_M_AXIS": {
-        "interface_ports": [
-          "axis_subset_converter_1/M_AXIS",
-          "axi_stream_fifo_0/S_AXIS"
-        ]
-      },
       "axi_interconnect_0_M00_AXI": {
         "interface_ports": [
           "axi_interconnect_0/M00_AXI",
@@ -712,6 +706,12 @@
         "interface_ports": [
           "axi_interconnect_0/S00_AXI",
           "processing_system7_0/M_AXI_GP0"
+        ]
+      },
+      "axis_subset_converter_1_M_AXIS": {
+        "interface_ports": [
+          "axis_subset_converter_1/M_AXIS",
+          "axi_stream_fifo_0/S_AXIS"
         ]
       }
     },
@@ -769,10 +769,10 @@
           "proc_sys_reset_0/peripheral_aresetn",
           "axis_subset_converter_0/aresetn",
           "i2s_if_0/m_axis_aresetn",
-          "demod_0/s_axis_aresetn",
           "highpass_fir_0/s_axis_arstn",
           "axis_subset_converter_1/aresetn",
-          "axi_stream_fifo_0/S_AXIS_ARESETN"
+          "axi_stream_fifo_0/S_AXIS_ARESETN",
+          "demod_0/s_axis_aresetn"
         ]
       },
       "processing_system7_0_FCLK_CLK1": {
@@ -781,10 +781,10 @@
           "proc_sys_reset_0/slowest_sync_clk",
           "axis_subset_converter_0/aclk",
           "i2s_if_0/m_axis_aclk",
-          "demod_0/s_axis_aclk",
           "highpass_fir_0/s_axis_aclk",
           "axis_subset_converter_1/aclk",
-          "axi_stream_fifo_0/S_AXIS_ACLK"
+          "axi_stream_fifo_0/S_AXIS_ACLK",
+          "demod_0/s_axis_aclk"
         ]
       },
       "sound_gen_0_wave": {
