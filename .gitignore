@@ -12,3 +12,4 @@ sources/ip/*/*
 *.str
 *.jou
 *.log
+*.bin
