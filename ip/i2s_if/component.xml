@@ -356,7 +356,7 @@
       </spirit:file>
     </spirit:fileSet>
   </spirit:fileSets>
-  <spirit:description>i2s_if_v1_0</spirit:description>
+  <spirit:description>I2S to AXI Stream interface converter</spirit:description>
   <spirit:parameters>
     <spirit:parameter>
       <spirit:name>clkdiv_val</spirit:name>
@@ -392,7 +392,7 @@
       <xilinx:taxonomies>
         <xilinx:taxonomy>/UserIP</xilinx:taxonomy>
       </xilinx:taxonomies>
-      <xilinx:displayName>i2s_if_v1_0</xilinx:displayName>
+      <xilinx:displayName>I2S interface</xilinx:displayName>
       <xilinx:definitionSource>package_project</xilinx:definitionSource>
       <xilinx:xpmLibraries>
         <xilinx:xpmLibrary>XPM_CDC</xilinx:xpmLibrary>
