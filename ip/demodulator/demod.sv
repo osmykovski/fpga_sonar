@@ -55,17 +55,7 @@ module demod (
         end
     end
 
-    logic tvalid_z;
-    always @(posedge s_axis_aclk) begin
-        if(!s_axis_aresetn) begin
-            tvalid_z <= 0;
-            m_axis_tvalid <= 0;
-        end else if(s_axis_tvalid & s_axis_tready) begin
-            tvalid_z <= s_axis_tvalid;
-            m_axis_tvalid <= tvalid_z;
-        end
-    end
-
     assign s_axis_tready = m_axis_tready;
+    assign m_axis_tvalid = s_axis_tvalid;
     
 endmodule

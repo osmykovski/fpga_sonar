@@ -41,8 +41,21 @@ module tb ();
     end
 
     logic [31:0] s_tdata;
-    logic s_tvalid = 1, s_tready;
+    logic s_tvalid, s_tready;
     logic [1:0] s_tuser = 0;
+
+    int tvalid_cnt;
+    always @(posedge clk) begin
+        if(!rstn)
+            tvalid_cnt <= 0;
+        else begin
+            if(tvalid_cnt < 20)
+                tvalid_cnt <= tvalid_cnt + 1;
+            else
+                tvalid_cnt <= 0;
+        end
+    end
+    assign s_tvalid = tvalid_cnt == 20;
 
     // reversing bit order
     always @(posedge clk) begin
@@ -63,10 +76,7 @@ module tb ();
         end
     end
 
-    logic tready;
-    always @(posedge clk) begin
-        tready <= $urandom();
-    end
+    logic tready = 1;
 
     demod UUT(
         .s_axis_aclk    (clk),
