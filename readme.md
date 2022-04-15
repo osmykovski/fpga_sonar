@@ -25,3 +25,21 @@ Trying to make FPGA-based sonar.
 * Lowpass FIR filter
 * Decimator
 * AXI4 Stream to AXI4 Lite FIFO
+
+## Project deployment
+
+Execute the `deploy.bat` file (you may need to edit this file according to your Vivado version).
+
+## Catalog tree description
+
+* `doc`: project related documentation;
+* `ip`: custom IP-cores, used in the project;
+* `sdk`: Xilinx SDK project (without BSP and HDF)
+* `sources`: project sources
+    * `bd`: Vivado block design folder
+    * `hdf`: hardware platform specification file folder (specified in the `Export -> Export Hardware ...` dialog box)
+    * `ip`: non-BD IP instances
+    * `tb`: testbench files
+    * `xdc`: Xilinx design constraints folder
+* `clean.bat`: script to cleanin temporary project files
+* `deploy.bat` and `deploy.tcl`: project deployment scripts
