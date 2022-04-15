@@ -12,7 +12,7 @@ add_files -fileset sim_1 -quiet {sources/tb}
 # * constraints
 add_files -fileset constrs_1 -quiet {sources/xdc}
 # * non-bd ip-cores
-# add_files -norecurse [glob sources/ip/*/*.xci]
+add_files -norecurse [glob sources/ip/*/*.xci]
 
 # ip catalog
 set_property ip_repo_paths {ip} [current_project]
