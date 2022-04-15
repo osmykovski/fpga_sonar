@@ -21,15 +21,15 @@ int main(){
 
 	xil_printf("%08x\r\n", DestinationBuffer);
 
-	for(int i=0; i<10000;){
+	int i=0;
+	while(1){
 		int occup = fifo_rx_get_occup(XPAR_AXI_STREAM_FIFO_0_BASEADDR);
-		for(int x=0; x<occup/4; x++){
-			DestinationBuffer[i] = fifo_rd_fifo(XPAR_AXI_STREAM_FIFO_0_BASEADDR);
+		for(int x=0; x<occup; x++){
+			DestinationBuffer[i/4] = fifo_rd_fifo(XPAR_AXI_STREAM_FIFO_0_BASEADDR);
 			i++;
-			fifo_rd_fifo(XPAR_AXI_STREAM_FIFO_0_BASEADDR);
-			fifo_rd_fifo(XPAR_AXI_STREAM_FIFO_0_BASEADDR);
-			fifo_rd_fifo(XPAR_AXI_STREAM_FIFO_0_BASEADDR);
 		}
+//		usleep(1000);
+		if(i>10000*4) break;
 	}
 
 	xil_printf("done.");
