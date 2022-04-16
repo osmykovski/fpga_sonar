@@ -1,5 +1,7 @@
 `timescale 1ns/100ps
 
+// `define DATA_TRACE
+
 module tb ();
 
     logic clk = 1;
@@ -15,15 +17,13 @@ module tb ();
     end
 
     int fid_out;
-    logic signed [31:0] test_data[0:9999];
-    int fid;
 
+`ifdef DATA_TRACE
     initial begin
+        $display("DATA TRACING ON");
         fid_out = $fopen("C:/Users/Public/out.bin", "wb");
-        fid = $fopen("audio.bin", "rb");
-        $fread(test_data, fid);
-        $fclose(fid);
     end
+`endif
 
     logic [13:0] sample_cnt;
     always @(posedge clk) begin
@@ -35,7 +35,9 @@ module tb ();
 
     always @(posedge clk) begin
         if(sample_cnt == 9999) begin
+            `ifdef DATA_TRACE
             $fclose(fid_out);
+            `endif
             $finish();
         end
     end
@@ -48,25 +50,29 @@ module tb ();
     always @(posedge clk) begin
         if(!rstn)
             tvalid_cnt <= 0;
-        else begin
-            if(tvalid_cnt < 20)
-                tvalid_cnt <= tvalid_cnt + 1;
-            else
-                tvalid_cnt <= 0;
-        end
+        else
+            tvalid_cnt <= (tvalid_cnt + 1) % 20;
     end
-    assign s_tvalid = tvalid_cnt == 20;
+    assign s_tvalid = tvalid_cnt == 19;
 
-    // reversing bit order
+
+    logic signed [23:0] sine_lut [0:4] = {0, 7978040, 4930700, -4930700, -7978040};
+    logic signed [23:0] rand_data;
+    logic signed [23:0] sine_wave;
     always @(posedge clk) begin
-        for(int i=0;i<32;i++) begin
-            s_tdata[31-i] = test_data[sample_cnt][i];
+        if(!rstn)
+            s_tdata <= 0;
+        else if(s_tvalid & s_tready) begin
+            sine_wave = sine_lut[(sample_cnt*2) % 5];
+            rand_data = $random();
+            s_tdata <= sine_wave/2 + rand_data/8;
         end
     end
 
     logic signed [23:0] m_tdata;
     logic tvalid;
 
+`ifdef DATA_TRACE
     always @(posedge clk) begin
         if(tvalid) begin
             $fwrite(fid_out, "%c", m_tdata[7:0]);
@@ -75,6 +81,7 @@ module tb ();
             $fwrite(fid_out, "%c", 0);
         end
     end
+`endif
 
     logic tready = 1;
 

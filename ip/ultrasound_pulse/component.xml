@@ -684,7 +684,7 @@
       <spirit:file>
         <spirit:name>pulse_gen.sv</spirit:name>
         <spirit:fileType>systemVerilogSource</spirit:fileType>
-        <spirit:userFileType>CHECKSUM_6a268438</spirit:userFileType>
+        <spirit:userFileType>CHECKSUM_0a1598c7</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
@@ -762,7 +762,7 @@
       <xilinx:displayName>Pulse generator</xilinx:displayName>
       <xilinx:definitionSource>package_project</xilinx:definitionSource>
       <xilinx:coreRevision>3</xilinx:coreRevision>
-      <xilinx:coreCreationDateTime>2022-04-16T14:11:17Z</xilinx:coreCreationDateTime>
+      <xilinx:coreCreationDateTime>2022-04-16T17:48:11Z</xilinx:coreCreationDateTime>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
       <xilinx:xilinxVersion>2019.1</xilinx:xilinxVersion>

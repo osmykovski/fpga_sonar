@@ -5,17 +5,17 @@ module lowpass_fir (
     input  logic signed [23:0] s_axis_tdata,
     input  logic               s_axis_tvalid,
     output logic               s_axis_tready,
-    input  logic        [1:0]  s_axis_tuser,
+    input  logic        [2:0]  s_axis_tuser,
 
     output logic signed [23:0] m_axis_tdata,
     output logic               m_axis_tvalid,
     input  logic               m_axis_tready,
-    output logic        [1:0]  m_axis_tuser
+    output logic        [2:0]  m_axis_tuser
 );
 
     localparam filter_order = 128;
 
-    logic [1:0] tuser;
+    logic [2:0] tuser;
     always @(posedge s_axis_aclk) begin
         if(!s_axis_arstn)
             tuser <= 0;
@@ -37,7 +37,7 @@ module lowpass_fir (
         end
     end
 
-    logic signed [23:0] delay_reg [(filter_order*4)-1:0];
+    logic signed [23:0] delay_reg [(filter_order*8)-1:0];
     logic signed [23:0] sample;
     always @(posedge s_axis_aclk) begin
         if(s_axis_arstn) begin
