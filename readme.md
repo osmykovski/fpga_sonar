@@ -13,7 +13,7 @@ Trying to make FPGA-based sonar.
 
 ### Transmitter
 
-* Signal generator
+* BPSK-modulated signal generator
 * Buzzer
 
 ### Receiver

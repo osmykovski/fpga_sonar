@@ -1,15 +1,17 @@
 module pulse_generator #(
-    parameter half_period = 9
+    parameter half_period = 9      // sound half-period time
 )(
     input  logic        clk,
     input  logic        rstn,
     input  logic        enable,
-    input  logic [31:0] pattern,
-    input  logic [15:0] pulse_len,
-    input  logic [31:0] tx_period,
+    input  logic [15:0] pattern,   // signal pattern
+    input  logic [15:0] mask,      // soun wave mask
+    input  logic [15:0] pulse_len, // signal pulse lenght in sound wave periods
+    input  logic [31:0] tx_period, // signal transmission period in clock cycles
     output logic        wave
 );
 
+    // TX interval counter
     logic [31:0] tx_period_cnt;
     always @(posedge clk) begin
         if(!rstn)
@@ -23,6 +25,7 @@ module pulse_generator #(
             tx_period_cnt <= 32'hFFFFFFFF;
     end
 
+    // TX enable signal
     logic en_pulse;
     assign en_pulse = tx_period_cnt == 0;
 
@@ -32,10 +35,11 @@ module pulse_generator #(
             pulse_en <= 0;
         else if(en_pulse)
             pulse_en <= 1;
-        else if(bit_number == 32)
+        else if(bit_number == 16)
             pulse_en <= 0;
     end
 
+    // Sound wave generation
     logic pulse;
     logic [31:0] clkdiv_cnt;
     always @(posedge clk) begin
@@ -53,6 +57,7 @@ module pulse_generator #(
             pulse <= 0;
     end
 
+    // Modulation
     logic [15:0] pulse_cnt;
     logic [5:0] bit_number;
     always @(posedge clk) begin
@@ -60,7 +65,7 @@ module pulse_generator #(
             pulse_cnt <= 0;
             bit_number <= 0;
         end else if(clkdiv_cnt == half_period-1) begin
-            if(pulse_cnt < pulse_len)
+            if(pulse_cnt < pulse_len-1)
                 pulse_cnt <= pulse_cnt + 1;
             else begin
                 pulse_cnt <= 0;
@@ -69,6 +74,6 @@ module pulse_generator #(
         end
     end
 
-    assign wave = pulse & pattern[bit_number[4:0]];
+    assign wave = (pattern[bit_number[4:0]] ^ pulse) & pulse_en & mask[bit_number[4:0]];
     
 endmodule

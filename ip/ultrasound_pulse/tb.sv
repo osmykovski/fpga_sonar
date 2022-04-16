@@ -10,21 +10,21 @@ module tb ();
     end
 
     initial begin
-        #100;
-        rstn <= 1;
+        #100 rstn <= 1;
     end
 
     logic enable = 0;
-    logic [31:0] pattern = 32'hFF0055AA;
+    logic [31:0] pattern = 32'hF05A;
 
     pulse_generator UUT (
         .clk        (clk),
         .rstn       (rstn),
         .enable     (enable),
         .pattern    (pattern),
+        .mask       (16'b0001111111111111),
         .tx_period  (4999),
-        .half_period(9),
-        .pulse_len  (9)
+        .pulse_len  (9),
+        .wave       ()
     );
 
     initial begin

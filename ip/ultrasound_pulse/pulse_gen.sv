@@ -105,7 +105,8 @@
 	//-- Number of Slave Registers 4
 
     logic        enable;
-    logic [31:0] pattern;
+    logic [15:0] pattern;
+    logic [15:0] mask;
     logic [15:0] pulse_len;
     logic [31:0] tx_period;
 
@@ -225,6 +226,7 @@
 	      pattern <= 0;
 	      pulse_len <= 0;
 	      tx_period <= 0;
+		  mask <= 0;
 	    end 
 	  else begin
 	    if (slv_reg_wren)
@@ -236,13 +238,20 @@
 	                // Slave register 0
 	                enable <= S_AXI_WDATA[0];
 	              end  
-	          2'h1:
-	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+	          2'h1: begin
+	            for ( byte_index = 0; byte_index < 2; byte_index = byte_index+1 )
 	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
 	                // Respective byte enables are asserted as per write strobes 
 	                // Slave register 1
 	                pattern[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
 	              end  
+	            for ( byte_index = 2; byte_index < 4; byte_index = byte_index+1 )
+	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+	                // Respective byte enables are asserted as per write strobes 
+	                // Slave register 2
+	                mask[((byte_index-2)*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+	              end 
+			  end
 	          2'h2:
 	            for ( byte_index = 0; byte_index < 2; byte_index = byte_index+1 )
 	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
@@ -365,7 +374,7 @@
 	      // Address decoding for reading registers
 	      case ( axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] )
 	        2'h0   : reg_data_out <= {31'b0, enable};
-	        2'h1   : reg_data_out <= pattern;
+	        2'h1   : reg_data_out <= {mask, pattern};
 	        2'h2   : reg_data_out <= {16'b0, pulse_len};
 	        2'h3   : reg_data_out <= tx_period;
 	        default : reg_data_out <= 0;
@@ -400,6 +409,7 @@
     	.rstn      (S_AXI_ARESETN),
     	.enable    (enable       ),
     	.pattern   (pattern      ),
+		.mask      (mask         ),
     	.pulse_len (pulse_len    ),
     	.tx_period (tx_period    ),
     	.wave      (wave         )
