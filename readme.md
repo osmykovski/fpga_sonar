@@ -21,7 +21,7 @@ Trying to make FPGA-based sonar.
 * 4 I2S MEMS microphones
 * I2S to AXI Stream converter IP
 * Highpass FIR filter
-* Demodulator
+* Quadrature demodulator
 * Lowpass FIR filter
 * Decimator
 * AXI4 Stream to AXI4 Lite FIFO

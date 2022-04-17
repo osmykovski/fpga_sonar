@@ -56,7 +56,7 @@ module tb ();
 
     logic signed [23:0] m_tdata;
     logic m_tvalid, m_tready;
-    logic [1:0] m_tuser;
+    logic [2:0] m_tuser;
 
     int fid_out;
     initial begin
@@ -64,7 +64,7 @@ module tb ();
     end
 
     always @(posedge clk) begin
-        if(m_tvalid & m_tready) begin
+        if(m_tvalid & m_tready & m_tuser == 0) begin
             $fwrite(fid_out, "%c", m_tdata[7:0]);
             $fwrite(fid_out, "%c", m_tdata[15:8]);
             $fwrite(fid_out, "%c", m_tdata[23:16]);
@@ -121,7 +121,10 @@ module tb ();
     logic signed [23:0] d_tdata;
     logic               d_tvalid;
     logic               d_tready;
-    logic        [1:0]  d_tuser;
+    logic        [2:0]  d_tuser;
+    
+    logic signed [23:0] d_tdata_0;
+    logic signed [23:0] d_tdata_1;
 
     lowpass_fir_0 lp_inst (
         .s_axis_aclk  (clk),
@@ -137,5 +140,14 @@ module tb ();
         .m_axis_tready(m_tready),
         .m_axis_tuser (m_tuser ) 
     );
+
+    assign d_tdata_0 = d_tvalid & d_tready & d_tuser == 0 ? d_tdata : d_tdata_0;
+    assign d_tdata_1 = d_tvalid & d_tready & d_tuser == 4 ? d_tdata : d_tdata_1;
+    
+    logic signed [23:0] m_tdata_0;
+    logic signed [23:0] m_tdata_1;
+
+    assign m_tdata_0 = m_tvalid & m_tready & m_tuser == 0 ? m_tdata : m_tdata_0;
+    assign m_tdata_1 = m_tvalid & m_tready & m_tuser == 4 ? m_tdata : m_tdata_1;
     
 endmodule

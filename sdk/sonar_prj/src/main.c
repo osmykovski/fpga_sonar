@@ -22,7 +22,7 @@
 #define p_gen_set_tx_period(baseaddr, val) Xil_Out32(baseaddr + 0x0c, val)
 #define p_gen_get_tx_period(baseaddr) Xil_In32(baseaddr + 0x0c)
 
-u32 DestinationBuffer[10000];
+u32 DestinationBuffer[8192];
 
 int main(){
 
@@ -44,14 +44,29 @@ int main(){
 
 	xil_printf("%08x\r\n", DestinationBuffer);
 
-	int i=0;
+	// channels sync
+	uint32_t fifo_data;
+	uint8_t channel;
+	while(1){
+		int occup = fifo_rx_get_occup(XPAR_AXI_STREAM_FIFO_0_BASEADDR);
+		if(occup) {
+			fifo_data = fifo_rd_fifo(XPAR_AXI_STREAM_FIFO_0_BASEADDR);
+			channel = fifo_data >> 24;
+			if(channel == 7) break;
+		}
+	}
+
+	int i = 0;
 	while(1){
 		int occup = fifo_rx_get_occup(XPAR_AXI_STREAM_FIFO_0_BASEADDR);
 		for(int x=0; x<occup; x++){
-			DestinationBuffer[i/4] = fifo_rd_fifo(XPAR_AXI_STREAM_FIFO_0_BASEADDR);
-			i++;
+			fifo_data = fifo_rd_fifo(XPAR_AXI_STREAM_FIFO_0_BASEADDR);
+			channel = fifo_data >> 24;
+			DestinationBuffer[i + 1024*channel] = fifo_data & 0x00FFFFFF;
+			if(channel == 7) i++;
 		}
-		if(i>10000*4) break;
+
+		if(i>1023) break;
 	}
 
 	xil_printf("done.");

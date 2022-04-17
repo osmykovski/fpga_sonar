@@ -64,7 +64,7 @@ module demod (
         if(!s_axis_aresetn)
             phase <= {0, 0, 0, 0};
         else if(demod_state == ST_TX_Q & m_axis_tvalid & m_axis_tready)
-            phase[tuser] <= (phase[tuser] + 1) % 5;
+            phase[tuser] <= (phase[tuser] + 2) % 5;
     end
 
     always @(posedge s_axis_aclk) begin
@@ -100,6 +100,6 @@ module demod (
 
     assign s_axis_tready = demod_state == ST_READ;
     assign m_axis_tvalid = demod_state == ST_TX_I | demod_state == ST_TX_Q;
-    assign m_axis_tuser = {demod_state == ST_TX_Q, tuser};
+    assign m_axis_tuser = {tuser, demod_state == ST_TX_Q};
     
 endmodule
