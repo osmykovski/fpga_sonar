@@ -77,6 +77,7 @@
     		// accept the read data and response information.
 		input wire  S_AXI_RREADY,
 
+		output logic frame_sync,
 		output logic wave
 	);
 
@@ -412,7 +413,8 @@
 		.mask      (mask         ),
     	.pulse_len (pulse_len    ),
     	.tx_period (tx_period    ),
-    	.wave      (wave         )
+    	.wave      (wave         ),
+		.frame_sync(frame_sync   )
 	);
 
 	endmodule

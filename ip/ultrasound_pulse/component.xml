@@ -242,7 +242,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>d4e72429</spirit:value>
+            <spirit:value>ea0cdba8</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -258,7 +258,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>d4e72429</spirit:value>
+            <spirit:value>ea0cdba8</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -636,6 +636,19 @@
         </spirit:wire>
       </spirit:port>
       <spirit:port>
+        <spirit:name>frame_sync</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>logic</spirit:typeName>
+              <spirit:viewNameRef>xilinx_anylanguagesynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
         <spirit:name>wave</spirit:name>
         <spirit:wire>
           <spirit:direction>out</spirit:direction>
@@ -663,7 +676,7 @@
       <spirit:modelParameter spirit:dataType="integer">
         <spirit:name>half_period</spirit:name>
         <spirit:displayName>Half Period</spirit:displayName>
-        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.half_period">9</spirit:value>
+        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.half_period">2500</spirit:value>
       </spirit:modelParameter>
     </spirit:modelParameters>
   </spirit:model>
@@ -684,7 +697,7 @@
       <spirit:file>
         <spirit:name>pulse_gen.sv</spirit:name>
         <spirit:fileType>systemVerilogSource</spirit:fileType>
-        <spirit:userFileType>CHECKSUM_0a1598c7</spirit:userFileType>
+        <spirit:userFileType>CHECKSUM_2229aaf3</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
@@ -733,7 +746,7 @@
     <spirit:parameter>
       <spirit:name>half_period</spirit:name>
       <spirit:displayName>CLK divide value</spirit:displayName>
-      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.half_period">9</spirit:value>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.half_period">2500</spirit:value>
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>Component_Name</spirit:name>
@@ -761,17 +774,17 @@
       </xilinx:taxonomies>
       <xilinx:displayName>Pulse generator</xilinx:displayName>
       <xilinx:definitionSource>package_project</xilinx:definitionSource>
-      <xilinx:coreRevision>3</xilinx:coreRevision>
-      <xilinx:coreCreationDateTime>2022-04-16T17:48:11Z</xilinx:coreCreationDateTime>
+      <xilinx:coreRevision>4</xilinx:coreRevision>
+      <xilinx:coreCreationDateTime>2022-04-19T18:32:52Z</xilinx:coreCreationDateTime>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
       <xilinx:xilinxVersion>2019.1</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="c873e378"/>
       <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="871a59ce"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="9f5f10b1"/>
-      <xilinx:checksum xilinx:scope="ports" xilinx:value="9f59df40"/>
-      <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="93783eb3"/>
-      <xilinx:checksum xilinx:scope="parameters" xilinx:value="08584db4"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="be1c9c22"/>
+      <xilinx:checksum xilinx:scope="ports" xilinx:value="b99972df"/>
+      <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="7b5502d9"/>
+      <xilinx:checksum xilinx:scope="parameters" xilinx:value="f8fad811"/>
     </xilinx:packagingInfo>
   </spirit:vendorExtensions>
 </spirit:component>

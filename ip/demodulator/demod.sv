@@ -6,11 +6,13 @@ module demod (
     input  logic               s_axis_tvalid,
     output logic               s_axis_tready,
     input  logic        [1:0]  s_axis_tuser,
+    input  logic               s_axis_tlast,
 
     output logic signed [23:0] m_axis_tdata,
     output logic               m_axis_tvalid,
     input  logic               m_axis_tready,
-    output logic        [2:0]  m_axis_tuser
+    output logic        [2:0]  m_axis_tuser,
+    output logic               m_axis_tlast
 );
 
     logic signed [23:0] sine_lut_i [0:4] = {      0, 7978039,  4930699, -4930701, -7978041};
@@ -33,11 +35,15 @@ module demod (
     end
 
     logic [1:0] tuser;
+    logic tlast;
     always @(posedge s_axis_aclk) begin
-        if(!s_axis_aresetn)
+        if(!s_axis_aresetn) begin
             tuser <= 0;
-        else if(s_axis_tvalid & s_axis_tready)
+            tlast <= 0;
+        end else if(s_axis_tvalid & s_axis_tready) begin
             tuser <= s_axis_tuser;
+            tlast <= s_axis_tlast;
+        end
     end
 
     logic signed [23:0] sine_val;
@@ -101,5 +107,6 @@ module demod (
     assign s_axis_tready = demod_state == ST_READ;
     assign m_axis_tvalid = demod_state == ST_TX_I | demod_state == ST_TX_Q;
     assign m_axis_tuser = {tuser, demod_state == ST_TX_Q};
+    assign m_axis_tlast = tlast;
     
 endmodule

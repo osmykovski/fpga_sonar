@@ -47,6 +47,17 @@ module tb ();
 
     assign SD = {true_data[bit_cnt], ~true_data[bit_cnt]};
 
+    int sync_cnt;
+    always @(posedge clk) begin
+        if(!rstn)
+            sync_cnt <= 0;
+        else
+            sync_cnt <= (sync_cnt + 1) % 50000;
+    end
+
+    logic frame_sync;
+    assign frame_sync = sync_cnt == 49999;
+
     i2s_if UUT (
         .m_axis_aclk   (clk   ),
         .m_axis_aresetn(rstn  ),
@@ -56,7 +67,8 @@ module tb ();
         .m_axis_tdata  (tdata ),
         .m_axis_tvalid (tvalid),
         .m_axis_tready (tready),
-        .m_axis_tuser  ({tuser})
+        .m_axis_tuser  ({tuser}),
+        .frame_sync    (frame_sync)
     );
     
 endmodule

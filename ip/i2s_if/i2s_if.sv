@@ -12,7 +12,10 @@ module i2s_if #(
     output logic [31:0] m_axis_tdata,
     output logic        m_axis_tvalid,
     input  logic        m_axis_tready,
-    output logic [1:0]  m_axis_tuser
+    output logic [1:0]  m_axis_tuser,
+    output logic        m_axis_tlast,
+
+    input  logic        frame_sync
 );
 
     logic [1:0] sd_cdc;
@@ -91,6 +94,43 @@ module i2s_if #(
 
     logic tvalid;
     assign tvalid = bit_cnt == 31 && clkdiv_cnt >= clkdiv_val-2;
+
+    logic sync;
+    xpm_cdc_array_single #(
+        .DEST_SYNC_FF         (2),
+        .INIT_SYNC_FF         (0),
+        .SRC_INPUT_REG        (0),
+        .WIDTH                (1)
+    )
+    SYNC_CDC_INST (
+        .dest_out             (sync),
+        .dest_clk             (m_axis_aclk),
+        .src_in               (frame_sync)
+    );
+
+    logic sync_z;
+    always @(posedge m_axis_aclk) begin
+        if(!m_axis_aresetn)
+            sync_z <= 0;
+        else begin
+            if(sync)
+                sync_z <= 1;
+            if(tlast)
+                sync_z <= 0;
+        end
+    end
+
+    logic tlast;
+    always @(posedge m_axis_aclk) begin
+        if(!m_axis_aresetn)
+            tlast <= 0;
+        else if(tuser == 3 & tvalid) begin
+            if(sync_z)
+                tlast <= 1;
+            else
+                tlast <= 0;
+        end
+    end
     
     xpm_fifo_axis #(
         .CDC_SYNC_STAGES    (2             ),
@@ -108,12 +148,14 @@ module i2s_if #(
         .m_axis_tdata (m_axis_tdata          ),
         .m_axis_tuser (m_axis_tuser          ),
         .m_axis_tvalid(m_axis_tvalid         ),
+        .m_axis_tlast (m_axis_tlast          ),
 
         .s_aclk       (m_axis_aclk           ),
-        .s_aresetn    (m_axis_aresetn          ),
+        .s_aresetn    (m_axis_aresetn        ),
         .s_axis_tdata (clkdiv_cnt == clkdiv_val-1 ? din_reg_h : din_reg_l),
         .s_axis_tuser (tuser                 ),
-        .s_axis_tvalid(tvalid                )
+        .s_axis_tvalid(tvalid                ),
+        .s_axis_tlast (tlast                 )
     );
     
 endmodule

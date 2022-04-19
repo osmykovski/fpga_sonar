@@ -6,17 +6,21 @@ module decimator (
     input  logic               s_axis_tvalid,
     output logic               s_axis_tready,
     input  logic        [2:0]  s_axis_tuser,
+    input  logic               s_axis_tlast,
 
     output logic signed [23:0] m_axis_tdata,
     output logic               m_axis_tvalid,
     input  logic               m_axis_tready,
-    output logic        [2:0]  m_axis_tuser
+    output logic        [2:0]  m_axis_tuser,
+    output logic               m_axis_tlast
 );
 
+    // TODO: fix timings
     assign s_axis_tready = word_cnt[s_axis_tuser] ? 1 : m_axis_tready;
     assign m_axis_tdata = s_axis_tdata;
     assign m_axis_tuser = s_axis_tuser;
     assign m_axis_tvalid = word_cnt[s_axis_tuser] ? 0 : s_axis_tvalid;
+    assign m_axis_tlast = s_axis_tlast;
 
     logic [2:0] word_cnt [7:0];
     always @(posedge s_axis_aclk) begin

@@ -8,7 +8,8 @@ module pulse_generator #(
     input  logic [15:0] mask,      // soun wave mask
     input  logic [15:0] pulse_len, // signal pulse lenght in sound wave periods
     input  logic [31:0] tx_period, // signal transmission period in clock cycles
-    output logic        wave
+    output logic        wave,
+    output logic        frame_sync
 );
 
     // TX interval counter
@@ -28,6 +29,7 @@ module pulse_generator #(
     // TX enable signal
     logic en_pulse;
     assign en_pulse = tx_period_cnt == 0;
+    assign frame_sync = en_pulse;
 
     logic pulse_en;
     always @(posedge clk) begin

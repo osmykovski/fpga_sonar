@@ -6,24 +6,31 @@ module lowpass_fir (
     input  logic               s_axis_tvalid,
     output logic               s_axis_tready,
     input  logic        [2:0]  s_axis_tuser,
+    input  logic               s_axis_tlast,
 
     output logic signed [23:0] m_axis_tdata,
     output logic               m_axis_tvalid,
     input  logic               m_axis_tready,
-    output logic        [2:0]  m_axis_tuser
+    output logic        [2:0]  m_axis_tuser,
+    output logic               m_axis_tlast
 );
 
     localparam filter_order = 128;
 
     logic [2:0] tuser;
+    logic tlast;
     always @(posedge s_axis_aclk) begin
-        if(!s_axis_arstn)
+        if(!s_axis_arstn) begin
             tuser <= 0;
-        else if(s_axis_tvalid & s_axis_tready)
+            tlast <= 0;
+        end else if(s_axis_tvalid & s_axis_tready) begin
             tuser <= s_axis_tuser;
+            tlast <= s_axis_tlast;
+        end
     end
     
     assign m_axis_tuser = tuser;
+    assign m_axis_tlast = tlast;
 
     logic [7:0] sample_cnt;
     always @(posedge s_axis_aclk) begin

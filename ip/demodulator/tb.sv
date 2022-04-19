@@ -45,6 +45,7 @@ module tb ();
     logic [31:0] s_tdata;
     logic s_tvalid, s_tready;
     logic [1:0] s_tuser = 0;
+    logic s_tlast;
 
     int tvalid_cnt;
     always @(posedge clk) begin
@@ -70,6 +71,7 @@ module tb ();
     end
 
     logic signed [23:0] m_tdata;
+    logic m_tlast;
     logic tvalid;
 
 `ifdef DATA_TRACE
@@ -85,6 +87,16 @@ module tb ();
 
     logic tready = 1;
 
+    int last_cnt;
+    always @(posedge clk) begin
+        if(!rstn)
+            last_cnt <= 0;
+        else if(s_tvalid & s_tready)
+            last_cnt <= (last_cnt + 1) % 10;
+    end
+
+    assign s_tlast = last_cnt == 9;
+
     demod UUT(
         .s_axis_aclk    (clk),
         .s_axis_aresetn (rstn),
@@ -93,11 +105,13 @@ module tb ();
         .s_axis_tvalid  (s_tvalid),
         .s_axis_tready  (s_tready),
         .s_axis_tuser   (s_tuser),
+        .s_axis_tlast   (s_tlast),
 
         .m_axis_tdata   (m_tdata),
         .m_axis_tvalid  (tvalid),
         .m_axis_tready  (tready),
-        .m_axis_tuser   ()
+        .m_axis_tuser   (),
+        .m_axis_tlast   (m_tlast)
     );
     
 endmodule
