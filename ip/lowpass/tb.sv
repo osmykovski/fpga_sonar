@@ -17,7 +17,7 @@ module tb ();
     logic [23:0] tdata;
     logic        tvalid;
     logic        tready;
-    logic [1:0]  tuser;
+    logic [2:0]  tuser;
     logic        tlast;
 
     initial begin
@@ -50,7 +50,7 @@ module tb ();
     
     logic [23:0] m_tdata;
     logic        m_tvalid;
-    logic [1:0]  m_tuser;
+    logic [2:0]  m_tuser;
     logic        m_tlast;
 
     logic m_tready = 1;

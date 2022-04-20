@@ -164,7 +164,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>07513905</spirit:value>
+            <spirit:value>f67cf9ab</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -180,7 +180,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>07513905</spirit:value>
+            <spirit:value>f67cf9ab</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -411,7 +411,7 @@
       <spirit:file>
         <spirit:name>highpass_fir.sv</spirit:name>
         <spirit:fileType>systemVerilogSource</spirit:fileType>
-        <spirit:userFileType>CHECKSUM_07513905</spirit:userFileType>
+        <spirit:userFileType>CHECKSUM_f67cf9ab</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
@@ -469,14 +469,14 @@
       </xilinx:taxonomies>
       <xilinx:displayName>Highpass FIR filter</xilinx:displayName>
       <xilinx:definitionSource>package_project</xilinx:definitionSource>
-      <xilinx:coreRevision>5</xilinx:coreRevision>
-      <xilinx:coreCreationDateTime>2022-04-19T20:02:45Z</xilinx:coreCreationDateTime>
+      <xilinx:coreRevision>6</xilinx:coreRevision>
+      <xilinx:coreCreationDateTime>2022-04-20T19:31:29Z</xilinx:coreCreationDateTime>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
       <xilinx:xilinxVersion>2019.1</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="96f774f2"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="1f1afd1d"/>
-      <xilinx:checksum xilinx:scope="ports" xilinx:value="88c20a22"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="f99a9037"/>
+      <xilinx:checksum xilinx:scope="ports" xilinx:value="eeeae0cd"/>
       <xilinx:checksum xilinx:scope="parameters" xilinx:value="7e2f1631"/>
     </xilinx:packagingInfo>
   </spirit:vendorExtensions>

@@ -19,6 +19,7 @@ module highpass_fir (
 
     logic [1:0] tuser;
     logic tlast;
+    logic signed [23:0] tdata;
     always @(posedge s_axis_aclk) begin
         if(!s_axis_arstn) begin
             tuser <= 0;
@@ -26,6 +27,7 @@ module highpass_fir (
         end else if(s_axis_tvalid & s_axis_tready) begin
             tuser <= s_axis_tuser;
             tlast <= s_axis_tlast;
+            tdata <= s_axis_tdata;
         end
     end
     
@@ -47,19 +49,16 @@ module highpass_fir (
     logic signed [23:0] delay_reg [(filter_order*4)-1:0];
     logic signed [23:0] sample;
     always @(posedge s_axis_aclk) begin
-        if(s_axis_arstn) begin
-            if(s_axis_tvalid & s_axis_tready)
-                sample <= s_axis_tdata;
-            else if(sample_cnt < filter_order)
-                sample <= delay_reg[{tuser, sample_cnt[6:0]}];
-        end
+        if(s_axis_arstn & sample_cnt < filter_order)
+            sample <= delay_reg[{tuser, sample_cnt[6:0]}];
     end
 
     always @(posedge s_axis_aclk) begin
         if(s_axis_arstn & sample_cnt < filter_order)
-            delay_reg[{tuser, sample_cnt[6:0]}] <= sample;
+            delay_reg[{tuser, sample_cnt[6:0]}] <= sample_cnt == 0 ? tdata : sample;
     end
 
+    // TODO: recalculate coefficients
     logic signed [23:0] coe [0:filter_order-1] = {
            -1,        6,      -12,        8,       32,     -150,      382,     -726,
          1106,    -1360,     1274,     -689,     -366,     1582,    -2401,     2226,
@@ -97,20 +96,22 @@ module highpass_fir (
             coe_fir <= coe[coe_cnt];
     end
 
-    logic signed [47:0] accum;
+    logic signed [41:0] accum;
     always @(posedge s_axis_aclk) begin
         if(!s_axis_arstn)
             accum <= 0;
         else begin
-            if(sample_cnt < filter_order)
-                accum <= accum + (sample * coe_fir);
+            if(sample_cnt == 0)
+                accum <= accum + (tdata * (coe_fir >>> 6));
+            else if(sample_cnt < filter_order)
+                accum <= accum + (sample * (coe_fir >>> 6));
             else if(m_axis_tready & m_axis_tvalid)
                 accum <= 0;
         end
     end
 
     assign s_axis_tready = (sample_cnt >= filter_order) & m_axis_tready;
-    assign m_axis_tdata = accum >>> 24;
+    assign m_axis_tdata = accum >>> 18;
 
     always @(posedge s_axis_aclk) begin
         if(!s_axis_arstn)
