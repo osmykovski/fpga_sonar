@@ -164,7 +164,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>b71bac57</spirit:value>
+            <spirit:value>c0780486</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -180,7 +180,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>b71bac57</spirit:value>
+            <spirit:value>c0780486</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -195,7 +195,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>709d3b95</spirit:value>
+            <spirit:value>01a82f0f</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -411,7 +411,7 @@
       <spirit:file>
         <spirit:name>decimator.sv</spirit:name>
         <spirit:fileType>systemVerilogSource</spirit:fileType>
-        <spirit:userFileType>CHECKSUM_b71bac57</spirit:userFileType>
+        <spirit:userFileType>CHECKSUM_c0780486</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
@@ -469,14 +469,14 @@
       </xilinx:taxonomies>
       <xilinx:displayName>Decimator</xilinx:displayName>
       <xilinx:definitionSource>package_project</xilinx:definitionSource>
-      <xilinx:coreRevision>4</xilinx:coreRevision>
-      <xilinx:coreCreationDateTime>2022-04-19T20:05:32Z</xilinx:coreCreationDateTime>
+      <xilinx:coreRevision>5</xilinx:coreRevision>
+      <xilinx:coreCreationDateTime>2022-04-20T14:03:41Z</xilinx:coreCreationDateTime>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
       <xilinx:xilinxVersion>2019.1</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="c63fa3c1"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="776a57d6"/>
-      <xilinx:checksum xilinx:scope="ports" xilinx:value="8f2df715"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="0c8a1a46"/>
+      <xilinx:checksum xilinx:scope="ports" xilinx:value="0ba690d3"/>
       <xilinx:checksum xilinx:scope="parameters" xilinx:value="7fcca747"/>
     </xilinx:packagingInfo>
   </spirit:vendorExtensions>
