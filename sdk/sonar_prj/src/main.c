@@ -33,7 +33,7 @@ XSound_dma dma_inst;
 static XScuGic intc_inst;
 
 void sound_dma_interrupt_handler(void){
-	for(int i=0; i<256; i++){
+	for(int i=0; i<2048; i++){
 		xil_printf("%c%c%c",
 				(DestinationBuffer[i] & 0x00FF0000) >> 16,
 				(DestinationBuffer[i] & 0x0000FF00) >> 8,
@@ -50,11 +50,10 @@ int main(){
 	XUartPs_Config *uart_conf;
 	uart_conf = XUartPs_LookupConfig(XPAR_PS7_UART_1_DEVICE_ID);
 	XUartPs_CfgInitialize(&uart_inst, uart_conf, XPAR_PS7_UART_1_BASEADDR);
-	XUartPs_SetBaudRate(&uart_inst, 115200);
+	XUartPs_SetBaudRate(&uart_inst, 460800);
 
 	p_gen_set_pulse_len(XPAR_PULSE_GEN_0_BASEADDR, 16);
-//	p_gen_set_tx_period(XPAR_PULSE_GEN_0_BASEADDR, 3333333);
-	p_gen_set_tx_period(XPAR_PULSE_GEN_0_BASEADDR, 40000000);
+	p_gen_set_tx_period(XPAR_PULSE_GEN_0_BASEADDR, 20000000);
 	p_gen_set_pattern(XPAR_PULSE_GEN_0_BASEADDR, 0x1f35); // 13-bit barker code
 	p_gen_set_mask(XPAR_PULSE_GEN_0_BASEADDR, 0x1FFF);
 	p_gen_enable(XPAR_PULSE_GEN_0_BASEADDR);
