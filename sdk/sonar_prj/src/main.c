@@ -1,6 +1,11 @@
 #include "xil_printf.h"
 #include "xil_io.h"
 #include "sleep.h"
+#include "xuartps.h"
+#include "xsound_dma.h"
+#include "xil_cache.h"
+#include "xscugic.h"
+#include "xil_exception.h"
 
 #define fifo_rd_fifo(baseaddr) Xil_In32(baseaddr + 0x00)
 #define fifo_rx_get_occup(baseaddr) Xil_In32(baseaddr + 0x04)
@@ -22,56 +27,68 @@
 #define p_gen_set_tx_period(baseaddr, val) Xil_Out32(baseaddr + 0x0c, val)
 #define p_gen_get_tx_period(baseaddr) Xil_In32(baseaddr + 0x0c)
 
-u32 DestinationBuffer[8192];
+u32 DestinationBuffer[256*8];
+
+XSound_dma dma_inst;
+static XScuGic intc_inst;
+
+void sound_dma_interrupt_handler(void){
+	for(int i=0; i<256; i++){
+		xil_printf("%c%c%c",
+				(DestinationBuffer[i] & 0x00FF0000) >> 16,
+				(DestinationBuffer[i] & 0x0000FF00) >> 8,
+				(DestinationBuffer[i] & 0x000000FF) >> 0
+		);
+	}
+	XSound_dma_InterruptClear(&dma_inst, 0xFFFFFFFF);
+}
 
 int main(){
+	Xil_DCacheDisable();
+
+	XUartPs uart_inst;
+	XUartPs_Config *uart_conf;
+	uart_conf = XUartPs_LookupConfig(XPAR_PS7_UART_1_DEVICE_ID);
+	XUartPs_CfgInitialize(&uart_inst, uart_conf, XPAR_PS7_UART_1_BASEADDR);
+	XUartPs_SetBaudRate(&uart_inst, 115200);
 
 	p_gen_set_pulse_len(XPAR_PULSE_GEN_0_BASEADDR, 16);
-	p_gen_set_tx_period(XPAR_PULSE_GEN_0_BASEADDR, 3333333);
+//	p_gen_set_tx_period(XPAR_PULSE_GEN_0_BASEADDR, 3333333);
+	p_gen_set_tx_period(XPAR_PULSE_GEN_0_BASEADDR, 40000000);
 	p_gen_set_pattern(XPAR_PULSE_GEN_0_BASEADDR, 0x1f35); // 13-bit barker code
 	p_gen_set_mask(XPAR_PULSE_GEN_0_BASEADDR, 0x1FFF);
 	p_gen_enable(XPAR_PULSE_GEN_0_BASEADDR);
 
-	sleep(1);
+	XSound_dma_Initialize(&dma_inst, XPAR_SOUND_DMA_0_DEVICE_ID);
+	XSound_dma_Set_mem(&dma_inst, (u32)DestinationBuffer);
+	XSound_dma_InterruptGlobalEnable(&dma_inst);
+	XSound_dma_InterruptEnable(&dma_inst, 0xFFFFFFFF);
+	XSound_dma_EnableAutoRestart(&dma_inst);
+	XSound_dma_Start(&dma_inst);
 
-	for(int i=0; i<10000;){
-		int occup = fifo_rx_get_occup(XPAR_AXI_STREAM_FIFO_0_BASEADDR);
-		for(int x=0; x<occup; x++){
-			fifo_rd_fifo(XPAR_AXI_STREAM_FIFO_0_BASEADDR);
-			i++;
-		}
-	}
+	Xil_ExceptionInit();
+	Xil_ExceptionEnable();
+	XScuGic_Config *IntcConfig;
+	IntcConfig = XScuGic_LookupConfig(XPAR_SCUGIC_0_DEVICE_ID);
+	XScuGic_CfgInitialize(&intc_inst, IntcConfig, IntcConfig->CpuBaseAddress);
 
-	xil_printf("%08x\r\n", DestinationBuffer);
+	Xil_ExceptionRegisterHandler(
+			XIL_EXCEPTION_ID_INT,
+			(Xil_ExceptionHandler) sound_dma_interrupt_handler,
+			&intc_inst
+	);
 
-	// channels sync
-	uint32_t fifo_data;
-	uint8_t channel;
-	while(1){
-		int occup = fifo_rx_get_occup(XPAR_AXI_STREAM_FIFO_0_BASEADDR);
-		if(occup) {
-			fifo_data = fifo_rd_fifo(XPAR_AXI_STREAM_FIFO_0_BASEADDR);
-			channel = fifo_data >> 24;
-			if(channel == 7) break;
-		}
-	}
+	XScuGic_Connect(
+			&intc_inst,
+			XPAR_FABRIC_SOUND_DMA_0_INTERRUPT_INTR,
+			(Xil_ExceptionHandler)sound_dma_interrupt_handler,
+			(void *)&dma_inst
+	);
 
-	int i = 0;
-	while(1){
-		int occup = fifo_rx_get_occup(XPAR_AXI_STREAM_FIFO_0_BASEADDR);
-		for(int x=0; x<occup; x++){
-			fifo_data = fifo_rd_fifo(XPAR_AXI_STREAM_FIFO_0_BASEADDR);
-			channel = fifo_data >> 24;
-			DestinationBuffer[i + 1024*channel] = fifo_data & 0x00FFFFFF;
-			if(channel == 7) i++;
-		}
+	XScuGic_Enable(&intc_inst, XPAR_FABRIC_SOUND_DMA_0_INTERRUPT_INTR);
 
-		if(i>1023) break;
-	}
 
-	xil_printf("done.");
-
-	while(1) fifo_rd_fifo(XPAR_AXI_STREAM_FIFO_0_BASEADDR);
+	while(1);
 
 	return 0;
 }

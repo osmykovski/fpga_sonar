@@ -26,9 +26,9 @@ module decimator (
     logic [23:0] tdata;
     logic [2:0] tuser;
 
-    enum logic [1:0] {
-        ST_READ  = 2'b01,
-        ST_WRITE = 2'b10
+    enum logic {
+        ST_READ  = 0,
+        ST_WRITE = 1
     } dec_state;
 
     always @(posedge s_axis_aclk) begin

@@ -30,6 +30,15 @@ Trying to make FPGA-based sonar.
 
 Execute the `deploy.bat` file (you may need to edit this file according to your Vivado version).
 
+## HLS IP-core project deployment
+
+Use Vivado HLS Command Prompt:
+
+`vivado_hls -f ./sound_dma/script.tcl` for generating IP-core.
+
+`vivado_hls -p sound_dma` to open project in GUI mode.
+
+
 ## Catalog tree description
 
 * `doc`: project related documentation;
