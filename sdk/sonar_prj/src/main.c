@@ -50,10 +50,10 @@ int main(){
 	XUartPs_Config *uart_conf;
 	uart_conf = XUartPs_LookupConfig(XPAR_PS7_UART_1_DEVICE_ID);
 	XUartPs_CfgInitialize(&uart_inst, uart_conf, XPAR_PS7_UART_1_BASEADDR);
-	XUartPs_SetBaudRate(&uart_inst, 460800);
+	XUartPs_SetBaudRate(&uart_inst, 921600);
 
-	p_gen_set_pulse_len(XPAR_PULSE_GEN_0_BASEADDR, 16);
-	p_gen_set_tx_period(XPAR_PULSE_GEN_0_BASEADDR, 20000000);
+	p_gen_set_pulse_len(XPAR_PULSE_GEN_0_BASEADDR, 8);
+	p_gen_set_tx_period(XPAR_PULSE_GEN_0_BASEADDR, 40000000);
 	p_gen_set_pattern(XPAR_PULSE_GEN_0_BASEADDR, 0x1f35); // 13-bit barker code
 	p_gen_set_mask(XPAR_PULSE_GEN_0_BASEADDR, 0x1FFF);
 	p_gen_enable(XPAR_PULSE_GEN_0_BASEADDR);
