@@ -5,11 +5,11 @@ module pulse_generator #(
     input  logic        rstn,
     input  logic        enable,
     input  logic [15:0] pattern,   // signal pattern
-    input  logic [15:0] mask,      // soun wave mask
+    input  logic [15:0] mask,      // sound wave mask
     input  logic [15:0] pulse_len, // signal pulse lenght in sound wave periods
-    input  logic [31:0] tx_period, // signal transmission period in clock cycles
+    input  logic [31:0] tx_period, // signal TX period in clock cycles
     output logic        wave,
-    output logic        frame_sync
+    output logic        frame_sync // used as IRQ and for the TLAST generation
 );
 
     // TX interval counter
@@ -26,10 +26,19 @@ module pulse_generator #(
             tx_period_cnt <= 32'hFFFFFFFF;
     end
 
-    // TX enable signal
+    // start of frame signal
+    logic [2:0] sof;
     logic en_pulse;
     assign en_pulse = tx_period_cnt == 0;
-    assign frame_sync = en_pulse;
+
+    always @(posedge clk) begin
+        if(!rstn)
+            sof <= 3'b000;
+        else
+            sof <= {sof[1:0], en_pulse};
+    end
+
+    assign frame_sync = sof != 3'b000;
 
     logic pulse_en;
     always @(posedge clk) begin
@@ -61,7 +70,7 @@ module pulse_generator #(
 
     // Modulation
     logic [15:0] pulse_cnt;
-    logic [5:0] bit_number;
+    logic [4:0] bit_number;
     always @(posedge clk) begin
         if(!rstn | !pulse_en) begin
             pulse_cnt <= 0;
@@ -76,6 +85,6 @@ module pulse_generator #(
         end
     end
 
-    assign wave = (pattern[bit_number[4:0]] ^ pulse) & pulse_en & mask[bit_number[4:0]];
+    assign wave = (pattern[bit_number[3:0]] ^ pulse) & pulse_en & mask[bit_number[3:0]];
     
 endmodule
